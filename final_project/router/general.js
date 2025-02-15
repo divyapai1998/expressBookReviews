@@ -5,6 +5,23 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 const axios = require('axios').default;
 
+const getBooks = () => {
+  const bookList = axios.get("https://raw.githubusercontent.com/ibm-developer-skills-network/expressBookReviews/master/final_project/router/booksdb.json");
+  return bookList;
+}
+
+const doesExist = (username) => {
+  // Filter the users array for any user with the same username
+  let userswithsamename = users.filter((user) => {
+      return user.username === username;
+  });
+  if (userswithsamename.length > 0) {
+      return true;
+  } else {
+      return false;
+  }
+}
+
 // Task - 6
 public_users.post("/register", (req,res) => {
     const username = req.body.username;
@@ -19,23 +36,6 @@ public_users.post("/register", (req,res) => {
     }
     return res.status(404).json({message: "Unable to register user."});
   });
-
-const getBooks = () => {
-    const bookList = axios.get("https://raw.githubusercontent.com/ibm-developer-skills-network/expressBookReviews/master/final_project/router/booksdb.json");
-    return bookList;
-}
-
-const doesExist = (username) => {
-    // Filter the users array for any user with the same username
-    let userswithsamename = users.filter((user) => {
-        return user.username === username;
-    });
-    if (userswithsamename.length > 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 // Get the book list available in the shop
 // Task - 1
